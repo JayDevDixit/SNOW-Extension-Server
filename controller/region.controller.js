@@ -27,7 +27,6 @@ export const find_region = trycatchwrapper(async (req,res,next) => {
             success: false
         })
     }
-    console.log(customer_data)
 
 
     return res.status(200).json({
@@ -44,7 +43,6 @@ const check_similarity = trycatchwrapper(async (customer)=>{
     const bestScore = match.bestMatch.rating
     if(bestScore < 0.4) return null 
 
-    console.log('match found')
     return sheet_data[bestIndex]
 
 })

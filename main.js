@@ -1,13 +1,14 @@
 import express from 'express'
 import region_router from './routes/customer.route.js'
 import cors from 'cors'
+import { reqReceive } from './utility.js'
 
 const app = express()
 
 app.use(cors({
     origin: '*'
 }))
-
+app.use(reqReceive)
 app.get('/',(req,res)=>{
     res.send('Hello from server')
 })
