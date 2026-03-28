@@ -3,6 +3,12 @@ import region_router from './routes/customer.route.js'
 import cors from 'cors'
 import { reqReceive } from './utility.js'
 import {rateLimit} from 'express-rate-limit'
+import dotenv from "dotenv"
+
+if(process.env.NODE_ENV != 'PRD'){
+    dotenv.config()
+}
+
 
 const app = express()
 

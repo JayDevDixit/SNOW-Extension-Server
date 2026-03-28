@@ -3,11 +3,16 @@ import fs from 'fs/promises';
 import path from 'path'
 
 export const trycatchwrapper = (fn) => async (...args) =>{
+    const res = args[1]
     try {
         return await fn(...args)
     }catch (error) {
         console.error(`Exception occur: ${error.message}`)
-            writelog(`Error Occured: ${error.message}`)
+        writelog(`Error Occured: ${error.message}`)
+        return res.status(500).json({
+          message: error.message || 'Internal server error' ,
+          success: false
+        })
     }
 }
 

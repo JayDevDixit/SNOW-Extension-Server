@@ -2,6 +2,8 @@ import { normalize, trycatchwrapper } from "../utility.js"
 import XLSX from "xlsx"
 import stringSimilarity from "string-similarity"
 import path from 'path'
+import fs from 'fs'
+
 
 const cache={}
 export const find_region = trycatchwrapper(async (req,res,next) => {
@@ -11,9 +13,15 @@ export const find_region = trycatchwrapper(async (req,res,next) => {
         success: false
     })
 
-
-    const s1 = await find_in_excel(customer,'./data/Customer details continued.xlsx',[0],'Name')
-    const s2 = await find_in_excel(customer,'./data/Customer and Region_Do_not_refer.xlsx',[1,2,3],'Customer')
+    const data_dir = process.env.DATA_DIR
+    const log_dir = process.env.LOG_DIR
+    if(isNull(data_dir) || isNull(log_dir))
+        throw Error('Fail to load data or log dir from .env')
+    const excel_1 = path.join(data_dir,'Customer details continued.xlsx')
+    const excel_2 = path.join(data_dir,'Customer and Region_Do_not_refer.xlsx')
+    if(!fs.existsSync(excel_1) || !fs.existsSync(excel_2)) throw Error('Excel file or path does not exist')
+    const s1 = await find_in_excel(customer,excel_1,[0],'Name')
+    const s2 = await find_in_excel(customer,excel_2,[1,2,3],'Customer')
     if(isNull(s1) && isNull(s2))
         return res.status(404).json({
             message: 'Customer not found',
@@ -40,7 +48,7 @@ const check_similarity = trycatchwrapper(async (sheet,customer,column)=>{
             bestsheetindex = i
         }
     }
-    if(bestScore > 0.6 && bestsheetindex != -1 && bestIndex != -1) return sheet_data[bestsheetindex][bestIndex]
+    if(bestScore > 0.4 && bestsheetindex != -1 && bestIndex != -1) return sheet_data[bestsheetindex][bestIndex]
     return null
 
 })
