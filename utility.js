@@ -1,4 +1,4 @@
-import {fileURLToPath} from 'url'
+
 import fs from 'fs/promises';
 import path from 'path'
 
@@ -38,11 +38,12 @@ const timeStamp = () => {
 }
 
 export const writelog = trycatchwrapper(async(errormsg)=>{
-    const __filename = fileURLToPath(import.meta.url)
-    const __dirname = path.dirname(__filename)
-    const logdir = path.join(__dirname,'logs')
-    await fs.mkdir(logdir,{recursive:true})
-    const logfile = path.join(logdir,`${getTodayDate()}.log`)
+    const log_dir = process.env.LOG_DIR
+    if(isNull(log_dir)) 
+        throw Error(`Fail to load log dir from .env`)
+
+    await fs.mkdir(log_dir,{recursive:true})
+    const logfile = path.join(log_dir,`${getTodayDate()}.log`)
     await fs.appendFile(logfile,`${timeStamp()}      ${errormsg}\n`,'utf-8')
 })
 
@@ -61,3 +62,10 @@ export const reqReceive = trycatchwrapper((req,res,next) => {
     writelog(`Incoming Request ip:${ip} Method:${req.method}`)
     next()
 })
+
+export const isNull = (data) => {
+    if(!data || data=='' || data==undefined || data==null){
+        return true
+    }
+    return false
+}

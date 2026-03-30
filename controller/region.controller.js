@@ -1,4 +1,4 @@
-import { normalize, trycatchwrapper } from "../utility.js"
+import { isNull, normalize, trycatchwrapper } from "../utility.js"
 import XLSX from "xlsx"
 import stringSimilarity from "string-similarity"
 import path from 'path'
@@ -16,7 +16,7 @@ export const find_region = trycatchwrapper(async (req,res,next) => {
     const data_dir = process.env.DATA_DIR
     const log_dir = process.env.LOG_DIR
     if(isNull(data_dir) || isNull(log_dir))
-        throw Error('Fail to load data or log dir from .env')
+        throw Error(`Fail to load data or log dir from .env`)
     const excel_1 = path.join(data_dir,'Customer details continued.xlsx')
     const excel_2 = path.join(data_dir,'Customer and Region_Do_not_refer.xlsx')
     if(!fs.existsSync(excel_1) || !fs.existsSync(excel_2)) throw Error('Excel file or path does not exist')
@@ -77,12 +77,6 @@ const intializeXLSX = trycatchwrapper(async (filepath,sheet_indexes)=>{
 
 })
 
-const isNull = (data) => {
-    if(!data || data=='' || data==undefined || data==null){
-        return true
-    }
-    return false
-}
 
 
 
