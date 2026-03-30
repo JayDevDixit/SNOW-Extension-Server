@@ -13,11 +13,11 @@ RUN npm install --production
 COPY . .
 
 # Creating user that run app
-RUN addgroup app && adduser -S -G app app
+# RUN addgroup app && adduser -S -G app app
 
 
-RUN chown -R app:app /home/app/
-USER app
+# RUN chown -R app:app /home/app/
+# USER app
 
 EXPOSE 5000
 
