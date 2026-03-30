@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  snowserver:
+    container_name: snowserver
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=PRD
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/home/app/logs
+      - ./data:/home/app/data
+    restart: always
